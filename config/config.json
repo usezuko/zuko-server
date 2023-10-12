@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "group_mints",
+    "password": "1q2w3e",
+    "database": "group_mints",
+    "host": "localhost",
+    "dialect": "mysql2"
+  },
+  "test": {
+    "username": "group_mints",
+    "password": "1q2w3e",
+    "database": "group_mints",
+    "host": "localhost",
+    "dialect": "mysql2"
+  },
+  "production": {
+    "username": "group_mints",
+    "password": "1q2w3e",
+    "database": "group_mints",
+    "host": "localhost",
+    "dialect": "mysql2"
+  }
+}
