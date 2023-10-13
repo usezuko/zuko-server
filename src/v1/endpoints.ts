@@ -1,27 +1,18 @@
-import authHandler from "./handlers/authHandler";
 import middleware from "./middleware";
 import userHandler from "./handlers/userHandler";
 import inviteHandler from "./handlers/inviteHandler";
-import { Express, Request, Response } from "express"; // Import Express types
+import { Express, Request, Response } from "express";
 
 type Endpoint = {
   url: string;
   method: "get" | "post" | "put" | "delete" | "patch";
-  middleware: any[]; // You should replace 'any[]' with a more specific type for middleware
+  middleware: any[];
   handler: (req: Request, res: Response) => void;
   description: string;
 };
 
-const endpoints: Record<string, Endpoint> = {}; // Define the endpoints object
+const endpoints: Record<string, Endpoint> = {};
 
-// Define and populate the endpoints
-endpoints.loginUser = {
-  url: "/v1/user/login/:serviceprovider_name",
-  method: "get",
-  middleware: [],
-  handler: authHandler.loginUser,
-  description: "login user",
-};
 
 endpoints.createUser = {
   url: "/v1/user",
@@ -29,6 +20,14 @@ endpoints.createUser = {
   middleware: [],
   handler: userHandler.create,
   description: "create user",
+};
+
+endpoints.createUser = {
+  url: "/v1/user",
+  method: "post",
+  middleware: [],
+  handler: userHandler.auth,
+  description: "authenticate user",
 };
 
 endpoints.readUser = {
