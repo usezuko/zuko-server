@@ -10,7 +10,7 @@ import middleware from "./v1/middleware";
 const secret = process.env.JWT_SECRET || "my-secret";
 
 const app = express();
-const appPort = process.env.PORT || 3000;
+const appPort = process.env.PORT || 3050;
 
 const jwtMiddleware = jwt({
   secret: secret,
@@ -26,7 +26,7 @@ app.use(
 );
 
 console.log(
-  "\n\nIF THIS THROWS AN ERROR -\nMAKE SURE YOU ARE ALLOWED TO OPEN PORT 3000!\n\n"
+  "\n\nIF THIS THROWS AN ERROR -\nMAKE SURE YOU ARE ALLOWED TO OPEN PORT 3050!\n\n"
 );
 
 app.listen(appPort);

@@ -2,6 +2,12 @@ import { Request, Response } from "express";
 import Auth from "../classes/Auth";
 import ApiError from "../classes/ApiError";
 import User from "../classes/User";
+import {
+  AuthType,
+  ClaimType,
+  SismoConnect,
+  SismoConnectVerifiedResult,
+} from "@sismo-core/sismo-connect-server";
 
 
 const userHandler = {
@@ -17,6 +23,46 @@ const userHandler = {
       //console.log(err, 'creating user error')
 
       //res.status(400).send(new ApiError(400, reject));
+    }
+  },
+
+  auth: async (req: Request, res: Response) => {
+    const user = new User();
+    const simsoConnectResponse = req.body // get the zk proof
+
+    const sismoConnect = SismoConnect({
+      config: {
+        appId: "0xbffb8652509c7e27e0b0485beade19c2",
+        vault: {
+          impersonate: ["nansen.eth", "jebus.eth"],
+        },
+      },
+    });
+
+    try {
+      const result: SismoConnectVerifiedResult = await sismoConnect.verify(simsoConnectResponse, { auths: [{ authType: AuthType.VAULT }] })
+
+      const vaultId = result.getUserId(AuthType.VAULT)
+      if (vaultId) {
+        //check in db if the user table has exisisting user with matching vaultId
+        const existingUser = true; //TODO check here
+        if (existingUser) {
+          //log user in
+        } else {
+          //TODO: create user in db with vaultId
+          const result = await user.create();
+        }
+      } else {
+        res.status(400).send(new ApiError(400, "Invalid auth response"));
+      }
+      res.status(200).send({ userId: vaultId });
+
+    } catch (error) {
+      console.log(error, 'Error with verifying zk proof')
+
+      res.status(500).send(new ApiError(500, "Error with verifying zk proof"));
+
+
     }
   },
 
