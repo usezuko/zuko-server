@@ -8,6 +8,8 @@ import {
   SismoConnect,
   SismoConnectVerifiedResult,
 } from "@sismo-core/sismo-connect-server";
+import dotenv from "dotenv";
+dotenv.config();
 
 
 const userHandler = {
@@ -32,7 +34,7 @@ const userHandler = {
 
     const sismoConnect = SismoConnect({
       config: {
-        appId: "0xbffb8652509c7e27e0b0485beade19c2",
+        appId: process.env.SISMO_CONNECT_APP_ID || "",
         vault: {
           impersonate: ["nansen.eth", "jebus.eth"],
         },
