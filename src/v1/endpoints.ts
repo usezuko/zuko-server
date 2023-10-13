@@ -1,7 +1,6 @@
 import authHandler from "./handlers/authHandler";
-import messageHandler from "./handlers/messageHandler";
 import middleware from "./middleware";
-import groupHandler from "./handlers/groupHandler";
+import userHandler from "./handlers/userHandler";
 import inviteHandler from "./handlers/inviteHandler";
 import { Express, Request, Response } from "express"; // Import Express types
 
@@ -24,29 +23,20 @@ endpoints.loginUser = {
   description: "login user",
 };
 
-// Message endpoints
-endpoints.createMessage = {
-  url: "/v1/message",
+endpoints.createUser = {
+  url: "/v1/user",
   method: "post",
   middleware: [],
-  handler: messageHandler.create,
-  description: "create msg",
+  handler: userHandler.create,
+  description: "create user",
 };
 
-endpoints.createGroup = {
-  url: "/v1/group",
-  method: "post",
-  middleware: [],
-  handler: groupHandler.create,
-  description: "create group",
-};
-
-endpoints.readGroup = {
-  url: "/v1/group/:id",
+endpoints.readUser = {
+  url: "/v1/user/:id",
   method: "get",
   middleware: [],
-  handler: groupHandler.read,
-  description: "read group by userid/public address",
+  handler: userHandler.read,
+  description: "read user by userid/public address",
 };
 
 endpoints.createInvite = {
@@ -64,17 +54,5 @@ endpoints.readInvite = {
   handler: inviteHandler.read,
   description: "read invite by invite link",
 };
-
-endpoints.readMessageByGroupId = {
-  url: "/v1/message/:groupId",
-  method: "get",
-  middleware: [],
-  handler: messageHandler.readMessageByGroupId,
-  description: "read messages by groupid",
-};
-
-
-
-
 
 export default endpoints;

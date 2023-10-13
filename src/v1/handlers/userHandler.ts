@@ -1,23 +1,20 @@
 import { Request, Response } from "express";
-import User from "../classes/Auth";
+import Auth from "../classes/Auth";
 import ApiError from "../classes/ApiError";
-import Group from "../classes/Group";
-import { Socket } from "socket.io";
-import io from "../../index" // Import the socket instance
+import User from "../classes/User";
 
 
-const groupHandler = {
+const userHandler = {
   create: async (req: Request, res: Response) => {
-    const group = new Group();
-    group.set(req.body); // should be a user object
+    const user = new User();
+    user.set(req.body); // should be a user object
 
     try {
-      const result = await group.create();
-      io.emit("groupCreation", "EMITTED CREATION EVENT");
+      const result = await user.create();
 
       res.status(200).send(result);
     } catch (err) {
-      //console.log(err, 'creating group error')
+      //console.log(err, 'creating user error')
 
       //res.status(400).send(new ApiError(400, reject));
     }
@@ -27,12 +24,12 @@ const groupHandler = {
     const id = Number(req.params.id);
     if (id) {
       if (id == id) {
-        const group = new Group();
+        const user = new User();
         try {
-          const user = await group.read(id);
-          res.status(200).send(user);
+          const user_id = await user.read(id);
+          res.status(200).send(user_id);
         } catch (err) {
-          console.log(err, 'Reading group error')
+          console.log(err, 'Reading user error')
           //res.status(400).send(new ApiError(400, err));
         }
       } else {
@@ -90,4 +87,4 @@ const groupHandler = {
   },
 };
 
-export default groupHandler;
+export default userHandler;

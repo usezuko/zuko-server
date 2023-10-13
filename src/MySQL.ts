@@ -21,10 +21,20 @@ export default pool;  */
 
 
 import mysql, { Pool, PoolOptions } from "mysql2";
-import config from "./config";
+
 import dotenv from "dotenv";
 
 dotenv.config();
+
+const config = {
+  database_connection: {
+    host: "localhost",
+    user: "group_mints",
+    database: "group_mints",
+    password: "1q2w3e",
+    port: 3306,
+  },
+};
 
 const mysqlConfig: PoolOptions = !process.env.MYSQLDATABASE
   ? config.database_connection

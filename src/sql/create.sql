@@ -8,7 +8,7 @@ GRANT ALL PRIVILEGES ON group_mints.* TO 'group_mints'@'localhost';
 
 FLUSH PRIVILEGES;
 
-CREATE TABLE `group` (
+CREATE TABLE `user` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `group_name` VARCHAR(255) NOT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
