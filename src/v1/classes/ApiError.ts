@@ -1,12 +1,12 @@
-import { QueryError } from "mysql2"
+import { QueryError } from "mysql2";
 class ApiError {
-	ApiErrorcode: number;
-	message: string;
+  ApiErrorcode: number;
+  message: any;
 
-	constructor(ApiErrorcode: number, message: string) {
-		this.ApiErrorcode = ApiErrorcode;
-		this.message = message;
-	}
+  constructor(ApiErrorcode: number, message: any) {
+    this.ApiErrorcode = ApiErrorcode;
+    this.message = message;
+  }
 }
 
 export default ApiError;

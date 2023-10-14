@@ -42,33 +42,42 @@ class User {
     const user = this;
     return new Promise<User | undefined>(async (resolve, reject) => {
       try {
-        // Insert a row into the table
-        const { error, meta: insert } = await db
-          .prepare(
-            `INSERT INTO ${userTable} (vault_id, username, registration_timestamp) VALUES (?, ?, ?);`
-          )
-          .bind(user.vault_id, user.username, currentTimestamp)
-          .run();
+        const { results } = await db
+          .prepare(`SELECT * FROM ${userTable} WHERE username = ?1`)
+          .bind(user.username)
+          .all();
 
-        // Wait for transaction finality
-        const status = await insert.txn?.wait();
-        console.log(status, "status of waiting for tx");
+        if (results.length > 0) {
+          reject("Duplicate Username");
+        } else {
+          // Insert a row into the table
+          const { error, meta: insert } = await db
+            .prepare(
+              `INSERT INTO ${userTable} (vault_id, username, registration_timestamp) VALUES (?, ?, ?);`
+            )
+            .bind(user.vault_id, user.username, currentTimestamp)
+            .run();
 
-        const newUser = new User({
-          success: true,
-          vault_id: user.vault_id,
-          username: user.username,
-          registration_timestamp: user.registration_timestamp,
-        });
+          // Wait for transaction finality
+          const status = await insert.txn?.wait();
+          console.log(status, "status of waiting for tx");
 
-        resolve(newUser);
+          const newUser = new User({
+            success: true,
+            vault_id: user.vault_id,
+            username: user.username,
+            registration_timestamp: user.registration_timestamp,
+          });
+
+          resolve(newUser);
+        }
       } catch (e: any) {
         console.log(e);
-        return {
+        reject({
           success: false,
           message: e.message,
           cause: e.cause.message,
-        };
+        });
       }
     });
   };

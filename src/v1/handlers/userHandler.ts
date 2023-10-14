@@ -23,8 +23,8 @@ const userHandler = {
 
       res.status(200).send(result);
     } catch (err) {
-      //console.log(err, 'creating user error')
-      //res.status(400).send(new ApiError(400, reject));
+      console.log(err, "Error: userHandler");
+      res.status(400).send(new ApiError(400, err));
     }
   },
 
