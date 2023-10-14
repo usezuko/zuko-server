@@ -3,7 +3,7 @@ import db from "../../config";
 import dotenv from "dotenv";
 dotenv.config();
 
-const userTable = process.env.TABLELAND_DATABASE;
+const userTable = process.env.TABLELAND_USER_DATABASE;
 const currentTimestamp = Math.floor(new Date().getTime() / 1000);
 
 class User {
@@ -38,6 +38,7 @@ class User {
   /*                  */
   /* CRUD OPERATIONS  */
   /*                  */
+  // create a new user
   create = async (): Promise<User | undefined> => {
     const user = this;
     return new Promise<User | undefined>(async (resolve, reject) => {
@@ -48,7 +49,7 @@ class User {
           .all();
 
         if (results.length > 0) {
-          reject("Duplicate Username");
+          reject("Username already exists");
         } else {
           // Insert a row into the table
           const { error, meta: insert } = await db
@@ -82,9 +83,9 @@ class User {
     });
   };
 
-  read = async (vault_id: string): Promise<User | undefined> => {
-    const user = this;
-    return new Promise<User | undefined>(async (resolve, reject) => {
+  // get users by vault_id
+  readByVaultId = async (vault_id: string): Promise<User[] | undefined> => {
+    return new Promise<User[] | undefined>(async (resolve, reject) => {
       try {
         const results: any = await db
           .prepare(`SELECT * FROM ${userTable} WHERE vault_id = ?1`)
@@ -94,14 +95,7 @@ class User {
         if (results.results.length === 0) {
           reject("No user object found from vault id");
         } else {
-          const userObj = new User({
-            success: true,
-            vault_id: results.results[0].vault_id,
-            username: results.results[0].username,
-            registration_timestamp: results.results[0].registration_timestamp,
-          });
-
-          resolve(userObj);
+          resolve(results);
         }
       } catch (e: any) {
         console.log(e);

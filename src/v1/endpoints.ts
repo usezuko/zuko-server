@@ -1,5 +1,6 @@
 import middleware from "./middleware";
 import userHandler from "./handlers/userHandler";
+import communityHandler from "./handlers/communityHandler";
 import inviteHandler from "./handlers/inviteHandler";
 import { Express, Request, Response } from "express";
 
@@ -13,7 +14,6 @@ type Endpoint = {
 
 const endpoints: Record<string, Endpoint> = {};
 
-
 endpoints.createUser = {
   url: "/v1/user",
   method: "post",
@@ -22,11 +22,11 @@ endpoints.createUser = {
   description: "create user",
 };
 
-endpoints.readUser = {
+endpoints.readUserByVaultId = {
   url: "/v1/user/:vault_id",
   method: "get",
   middleware: [],
-  handler: userHandler.read,
+  handler: userHandler.readByVaultId,
   description: "read user by vault id",
 };
 
@@ -36,6 +36,22 @@ endpoints.authUser = {
   middleware: [],
   handler: userHandler.auth,
   description: "authenticate user",
+};
+
+endpoints.createCommunity = {
+  url: "/v1/community",
+  method: "post",
+  middleware: [],
+  handler: communityHandler.create,
+  description: "create user",
+};
+
+endpoints.readCommunityByGroupId = {
+  url: "/v1/community/:group_id",
+  method: "get",
+  middleware: [],
+  handler: communityHandler.readByGroupId,
+  description: "read user by group id",
 };
 
 endpoints.createInvite = {
