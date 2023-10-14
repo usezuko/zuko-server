@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import Auth from "../classes/Auth";
 import ApiError from "../classes/ApiError";
 import User from "../classes/User";
+import { claims } from "../../constants";
+
 import {
   AuthType,
   ClaimType,
@@ -29,10 +31,11 @@ const userHandler = {
   auth: async (req: Request, res: Response) => {
     const user = new User();
     const simsoConnectResponse = req.body; // get the zk proof
+    console.log(simsoConnectResponse.proofs, 'sismoooo connect res')
 
     const sismoConnect = SismoConnect({
       config: {
-        appId: process.env.SISMO_CONNECT_APP_ID || "",
+        appId: "0x1224f1ca77f3c19432034f998bcac8bb" || "",
         vault: {
           impersonate: ["nansen.eth", "jebus.eth"],
         },
@@ -44,13 +47,16 @@ const userHandler = {
     try {
       const result: SismoConnectVerifiedResult = await sismoConnect.verify(
         simsoConnectResponse,
-        { auths: [{ authType: AuthType.VAULT }] }
+        {
+          auths: [{ authType: AuthType.VAULT }], claims,
+        }
       );
+      console.log(result, 'result of sismo connect verified resu')
 
       const vaultId = result.getUserId(AuthType.VAULT);
       if (vaultId) {
         //check in db if the user table has exisisting user with matching vaultId
-        var token = jwt.sign(vaultId, process.env.SECRET || ""); // Adjust the expiration time as needed
+        var token = jwt.sign(vaultId, process.env.JWT_SECRET || "default-secret"); // Adjust the expiration time as needed
 
         const existingUser = true; //TODO check here if in db user.read(vaultId)
         if (existingUser) {
@@ -62,6 +68,7 @@ const userHandler = {
         } else {
           //TODO: create user in db with vaultId
           //redirect to signup page in frontend
+          //set community id and user id here, community.create(groupId, userId, name, description)
           res.status(200).send({ vaultId: vaultId, jwt: token, newUser: true });
 
           //const result = await user.create();
@@ -69,7 +76,6 @@ const userHandler = {
       } else {
         res.status(400).send(new ApiError(400, "Invalid auth response"));
       }
-      res.status(200).send({ userId: vaultId });
     } catch (error) {
       console.log(error, "Error with verifying zk proof");
 
