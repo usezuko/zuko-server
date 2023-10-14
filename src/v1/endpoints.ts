@@ -22,8 +22,8 @@ endpoints.createUser = {
   description: "create user",
 };
 
-endpoints.createUser = {
-  url: "/v1/user",
+endpoints.authUser = {
+  url: "/v1/auth",
   method: "post",
   middleware: [],
   handler: userHandler.auth,
