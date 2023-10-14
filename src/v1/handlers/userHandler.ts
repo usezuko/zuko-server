@@ -18,6 +18,7 @@ dotenv.config();
 const userHandler = {
   create: async (req: Request, res: Response) => {
     const user = new User();
+    console.log(req.body, 'wats req body?')
     user.set(req.body); // should be a user object
     try {
       const result = await user.create();
@@ -58,7 +59,7 @@ const userHandler = {
         //check in db if the user table has exisisting user with matching vaultId
         var token = jwt.sign(vaultId, process.env.JWT_SECRET || "default-secret"); // Adjust the expiration time as needed
 
-        const existingUser = true; //TODO check here if in db user.read(vaultId)
+        const existingUser = false; //TODO check here if in db user.read(vaultId)
         if (existingUser) {
           //log user in
           //send user object to client and show logged in dashboard

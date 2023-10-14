@@ -3,7 +3,7 @@ import db from "../../config";
 import dotenv from "dotenv";
 dotenv.config();
 
-const userTable = process.env.TABLELAND_DATABASE;
+const userTable = process.env.TABLELAND_USER_DATABASE;
 const currentTimestamp = Math.floor(new Date().getTime() / 1000);
 
 class User {
@@ -40,6 +40,7 @@ class User {
   /*                  */
   create = async (): Promise<User | undefined> => {
     const user = this;
+    console.log(user, 'wats user?')
     return new Promise<User | undefined>(async (resolve, reject) => {
       try {
         const { results } = await db
