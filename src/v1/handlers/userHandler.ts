@@ -8,8 +8,13 @@ import {
   SismoConnect,
   SismoConnectVerifiedResult,
 } from "@sismo-core/sismo-connect-server";
+
+import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
+
+
+
 
 
 const userHandler = {
@@ -30,7 +35,10 @@ const userHandler = {
 
   auth: async (req: Request, res: Response) => {
     const user = new User();
+    console.log('Do i get here?')
     const simsoConnectResponse = req.body // get the zk proof
+    console.log(req.body, 'req body SIMSO PROOF')
+
 
     const sismoConnect = SismoConnect({
       config: {
@@ -41,23 +49,34 @@ const userHandler = {
       },
     });
 
+    console.log(process.env.SISMO_CONNECT_APP_ID, 'sismo app ID')
+
     try {
       const result: SismoConnectVerifiedResult = await sismoConnect.verify(simsoConnectResponse, { auths: [{ authType: AuthType.VAULT }] })
 
       const vaultId = result.getUserId(AuthType.VAULT)
+
       if (vaultId) {
         //check in db if the user table has exisisting user with matching vaultId
-        const existingUser = true; //TODO check here
+        var token = jwt.sign(vaultId, process.env.SECRET || ""); // Adjust the expiration time as needed
+
+        const existingUser = true; //TODO check here if in db user.read(vaultId)
         if (existingUser) {
           //log user in
+          //send user object to client and show logged in dashboard
+          res.status(200).send({ vaultId: vaultId, jwt: token, newUser: false });
         } else {
           //TODO: create user in db with vaultId
-          const result = await user.create();
+          //redirect to signup page in frontend
+          res.status(200).send({ vaultId: vaultId, jwt: token, newUser: true });
+
+          //const result = await user.create();
         }
       } else {
         res.status(400).send(new ApiError(400, "Invalid auth response"));
       }
-      res.status(200).send({ userId: vaultId });
+
+      //r
 
     } catch (error) {
       console.log(error, 'Error with verifying zk proof')
