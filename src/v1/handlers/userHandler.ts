@@ -84,12 +84,12 @@ const userHandler = {
     }
   },
 
-  read: async (req: Request, res: Response) => {
+  readByVaultId: async (req: Request, res: Response) => {
     const vaultId = String(req.params.vault_id);
     if (vaultId) {
       const user = new User();
       try {
-        const userObj = await user.read(vaultId);
+        const userObj = await user.readByVaultId(vaultId);
         res.status(200).send(userObj);
       } catch (err) {
         console.log(err, "Reading vault id error");
