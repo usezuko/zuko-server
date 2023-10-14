@@ -1,9 +1,9 @@
-import { OkPacket, ResultSetHeader, RowDataPacket } from "mysql2";
-import MySQL from "../../MySQL";
 import ApiError from "./ApiError";
 import db from "../../config";
+import dotenv from "dotenv";
+dotenv.config();
 
-const userTable = `user2_421613_199`;
+const userTable = process.env.TABLELAND_DATABASE;
 const currentTimestamp = Math.floor(new Date().getTime() / 1000);
 
 class User {
@@ -82,30 +82,35 @@ class User {
     });
   };
 
-  read = async (vault_id: number): Promise<User | undefined> => {
+  read = async (vault_id: string): Promise<User | undefined> => {
     const user = this;
-    return new Promise<User | undefined>((resolve, reject) => {
-      /*    if (vault_id) {
-           MySQL.pool.getConnection((err, db) => {
-             db.execute(
-               "SELECT * FROM `user` WHERE user_id = ?",
-               [vault_id],
-               (err, results, fields) => {
-                 if (err) {
-                   reject(new ApiError(500, err));
-                 } else if (results.length < 1) {
-                   reject(new ApiError(404, "User not found"));
-                 } else {
-                   user.set(results[0]);
-                   resolve(user);
-                 }
-                 db.release();
-               }
-             );
-           });
-         } else {
-           reject(new ApiError(500, "Missing user vault_id"));
-         } */
+    return new Promise<User | undefined>(async (resolve, reject) => {
+      try {
+        const results: any = await db
+          .prepare(`SELECT * FROM ${userTable} WHERE vault_id = ?1`)
+          .bind(vault_id)
+          .all();
+
+        if (results.results.length === 0) {
+          reject("No user object found from vault id");
+        } else {
+          const userObj = new User({
+            success: true,
+            vault_id: results.results[0].vault_id,
+            username: results.results[0].username,
+            registration_timestamp: results.results[0].registration_timestamp,
+          });
+
+          resolve(userObj);
+        }
+      } catch (e: any) {
+        console.log(e);
+        reject({
+          success: false,
+          message: e.message,
+          cause: e.cause.message,
+        });
+      }
     });
   };
 

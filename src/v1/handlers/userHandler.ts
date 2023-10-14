@@ -17,10 +17,8 @@ const userHandler = {
   create: async (req: Request, res: Response) => {
     const user = new User();
     user.set(req.body); // should be a user object
-
     try {
       const result = await user.create();
-
       res.status(200).send(result);
     } catch (err) {
       console.log(err, "Error: userHandler");
@@ -80,22 +78,18 @@ const userHandler = {
   },
 
   read: async (req: Request, res: Response) => {
-    const id = Number(req.params.id);
-    if (id) {
-      if (id == id) {
-        const user = new User();
-        try {
-          const user_id = await user.read(id);
-          res.status(200).send(user_id);
-        } catch (err) {
-          console.log(err, "Reading user error");
-          //res.status(400).send(new ApiError(400, err));
-        }
-      } else {
-        res
-          .status(403)
-          .send(new ApiError(403, "Access denied, userid does not match"));
+    const vaultId = String(req.params.vault_id);
+    if (vaultId) {
+      const user = new User();
+      try {
+        const userObj = await user.read(vaultId);
+        res.status(200).send(userObj);
+      } catch (err) {
+        console.log(err, "Reading vault id error");
+        res.status(400).send(new ApiError(400, err));
       }
+    } else {
+      res.status(404).send(new ApiError(404, "No vault id provided"));
     }
   },
 

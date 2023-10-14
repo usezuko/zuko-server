@@ -22,20 +22,20 @@ endpoints.createUser = {
   description: "create user",
 };
 
+endpoints.readUser = {
+  url: "/v1/user/:vault_id",
+  method: "get",
+  middleware: [],
+  handler: userHandler.read,
+  description: "read user by vault id",
+};
+
 endpoints.authUser = {
   url: "/v1/auth",
   method: "post",
   middleware: [],
   handler: userHandler.auth,
   description: "authenticate user",
-};
-
-endpoints.readUser = {
-  url: "/v1/user/:id",
-  method: "get",
-  middleware: [],
-  handler: userHandler.read,
-  description: "read user by userid/public address",
 };
 
 endpoints.createInvite = {
