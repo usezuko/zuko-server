@@ -84,7 +84,7 @@ class Community {
     });
   };
 
-  // get all communities
+  // get community by group id
   readByGroupId = async (
     group_id: string
   ): Promise<Community[] | undefined> => {
