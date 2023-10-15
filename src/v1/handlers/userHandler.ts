@@ -38,12 +38,11 @@ const userHandler = {
       config: {
         appId: "0x1224f1ca77f3c19432034f998bcac8bb" || "",
         vault: {
-          impersonate: ["nansen.eth", "jebus.eth"],
+          impersonate: ["dhadrien.sismo.eth",],
         },
       },
     });
 
-    console.log(process.env.SISMO_CONNECT_APP_ID, "sismo app ID");
 
     try {
       const result: SismoConnectVerifiedResult = await sismoConnect.verify(

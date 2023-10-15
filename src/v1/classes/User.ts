@@ -86,6 +86,7 @@ class User {
 
   // get users by vault_id
   readByVaultId = async (vault_id: string): Promise<User[] | undefined> => {
+    console.log(vault_id, 'wats vault id?')
     return new Promise<User[] | undefined>(async (resolve, reject) => {
       try {
         const results: any = await db
