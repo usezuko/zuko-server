@@ -85,9 +85,9 @@ class User {
   };
 
   // get users by vault_id
-  readByVaultId = async (vault_id: string): Promise<User[] | undefined> => {
+  readByVaultId = async (vault_id: string): Promise<User | undefined> => {
     console.log(vault_id, 'wats vault id?')
-    return new Promise<User[] | undefined>(async (resolve, reject) => {
+    return new Promise<User | undefined>(async (resolve, reject) => {
       try {
         const results: any = await db
           .prepare(`SELECT * FROM ${userTable} WHERE vault_id = ?1`)
@@ -97,7 +97,8 @@ class User {
         if (results.results.length === 0) {
           reject("No user object found from vault id");
         } else {
-          resolve(results);
+          console.log(results, 'wats results?')
+          resolve(results.results[0]);
         }
       } catch (e: any) {
         console.log(e);

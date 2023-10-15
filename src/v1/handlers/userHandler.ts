@@ -37,9 +37,6 @@ const userHandler = {
     const sismoConnect = SismoConnect({
       config: {
         appId: "0x1224f1ca77f3c19432034f998bcac8bb" || "",
-        vault: {
-          impersonate: ["dhadrien.sismo.eth",],
-        },
       },
     });
 
@@ -55,16 +52,12 @@ const userHandler = {
 
       const vaultId = result.getUserId(AuthType.VAULT);
       if (vaultId) {
-        //check in db if the user table has exisisting user with matching vaultId
-        var token = jwt.sign(vaultId, process.env.JWT_SECRET || "default-secret"); // Adjust the expiration time as needed
-
-        const existingUser = false; //TODO check here if in db user.read(vaultId)
-        if (existingUser) {
-          //log user in
-          //send user object to client and show logged in dashboard
+        var token = jwt.sign(vaultId, process.env.JWT_SECRET || "default-secret");
+        const existingUser = await user.readByVaultId(vaultId)
+        if (existingUser?.username) {
           res
             .status(200)
-            .send({ vaultId: vaultId, jwt: token, newUser: false });
+            .send({ user: existingUser, jwt: token, newUser: false });
         } else {
           //TODO: create user in db with vaultId
           //redirect to signup page in frontend
