@@ -26,7 +26,7 @@ endpoints.index = {
 endpoints.createUser = {
   url: "/v1/user",
   method: "post",
-  middleware: [],
+  middleware: [middleware.checkWhitelistedIpAddress],
   handler: userHandler.create,
   description: "create user",
 };
@@ -34,7 +34,7 @@ endpoints.createUser = {
 endpoints.createVaultIdToGroupId = {
   url: "/v1/user/community",
   method: "post",
-  middleware: [],
+  middleware: [middleware.checkWhitelistedIpAddress],
   handler: userHandler.createVaultIdToGroupId,
   description: "add a user (vault id) to a community (group id)",
 };
@@ -42,7 +42,7 @@ endpoints.createVaultIdToGroupId = {
 endpoints.readUserByVaultId = {
   url: "/v1/user/:vault_id",
   method: "get",
-  middleware: [],
+  middleware: [middleware.checkWhitelistedIpAddress],
   handler: userHandler.readByVaultId,
   description: "read user by vault id",
 };
@@ -50,7 +50,7 @@ endpoints.readUserByVaultId = {
 endpoints.authUser = {
   url: "/v1/auth",
   method: "post",
-  middleware: [],
+  middleware: [middleware.checkWhitelistedIpAddress],
   handler: userHandler.auth,
   description: "authenticate user",
 };
@@ -58,7 +58,7 @@ endpoints.authUser = {
 endpoints.createCommunity = {
   url: "/v1/community",
   method: "post",
-  middleware: [],
+  middleware: [middleware.checkWhitelistedIpAddress],
   handler: communityHandler.create,
   description: "create community",
 };
