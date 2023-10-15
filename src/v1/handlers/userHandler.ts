@@ -18,13 +18,26 @@ dotenv.config();
 const userHandler = {
   create: async (req: Request, res: Response) => {
     const user = new User();
-    console.log(req.body, 'wats req body?')
     user.set(req.body); // should be a user object
     try {
       const result = await user.create();
       res.status(200).send(result);
     } catch (err) {
-      console.log(err, "Error: userHandler");
+      console.log(err, "Error: userHandler: create");
+      res.status(400).send(new ApiError(400, err));
+    }
+  },
+
+  createVaultIdToGroupId: async (req: Request, res: Response) => {
+    const user = new User();
+    try {
+      const result = await user.createVaultIdToGroupId(
+        req.body.group_id,
+        req.body.vault_id
+      );
+      res.status(200).send(result);
+    } catch (err) {
+      console.log(err, "Error: userHandler: createVaultIdToGroupId");
       res.status(400).send(new ApiError(400, err));
     }
   },
@@ -32,7 +45,7 @@ const userHandler = {
   auth: async (req: Request, res: Response) => {
     const user = new User();
     const simsoConnectResponse = req.body; // get the zk proof
-    console.log(simsoConnectResponse.proofs, 'sismoooo connect res')
+    console.log(simsoConnectResponse.proofs, "sismoooo connect res");
 
     const sismoConnect = SismoConnect({
       config: {
@@ -45,10 +58,11 @@ const userHandler = {
       const result: SismoConnectVerifiedResult = await sismoConnect.verify(
         simsoConnectResponse,
         {
-          auths: [{ authType: AuthType.VAULT }], claims,
+          auths: [{ authType: AuthType.VAULT }],
+          claims,
         }
       );
-      console.log(result, 'result of sismo connect verified resu')
+      console.log(result, "result of sismo connect verified resu");
 
       const vaultId = result.getUserId(AuthType.VAULT);
       if (vaultId) {

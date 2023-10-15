@@ -4,7 +4,14 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const userTable = process.env.TABLELAND_USER_DATABASE;
+const userCommunityTable = process.env.TABLELAND_USER_COMMUNITY_DATABASE;
 const currentTimestamp = Math.floor(new Date().getTime() / 1000);
+
+type UserCommunity = {
+  success: boolean;
+  vault_id: string;
+  group_id: string;
+};
 
 class User {
   success?: boolean;
@@ -41,7 +48,6 @@ class User {
   // create a new user
   create = async (): Promise<User | undefined> => {
     const user = this;
-    console.log(user, 'wats user?')
     return new Promise<User | undefined>(async (resolve, reject) => {
       try {
         const { results } = await db
@@ -72,6 +78,55 @@ class User {
           });
 
           resolve(newUser);
+        }
+      } catch (e: any) {
+        console.log(e);
+        reject({
+          success: false,
+          message: e.message,
+          cause: e.cause.message,
+        });
+      }
+    });
+  };
+
+  // add a user (vault id) to a community (group id)
+  createVaultIdToGroupId = async (
+    group_id: string,
+    vault_id: string
+  ): Promise<UserCommunity | undefined> => {
+    const user = this;
+    return new Promise<UserCommunity | undefined>(async (resolve, reject) => {
+      try {
+        const { results } = await db
+          .prepare(
+            `SELECT * FROM ${userCommunityTable} WHERE group_id = ?1 AND vault_id =?2`
+          )
+          .bind(group_id, vault_id)
+          .all();
+
+        if (results.length > 0) {
+          reject("user is already a part of that community");
+        } else {
+          // Insert a row into the table
+          const { error, meta: insert } = await db
+            .prepare(
+              `INSERT INTO ${userCommunityTable} (vault_id, group_id) VALUES (?, ?);`
+            )
+            .bind(vault_id, group_id)
+            .run();
+
+          // Wait for transaction finality
+          const status = await insert.txn?.wait();
+          console.log(status, "status of waiting for tx");
+
+          const newUserCommunity = {
+            success: true,
+            vault_id: vault_id,
+            group_id: group_id,
+          };
+
+          resolve(newUserCommunity);
         }
       } catch (e: any) {
         console.log(e);
