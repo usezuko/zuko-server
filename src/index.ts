@@ -5,7 +5,6 @@ import { expressjwt as jwt } from "express-jwt";
 import v1 from "./v1/";
 import middleware from "./v1/middleware";
 
-
 // TODO: Store a better secret in a hidden config file
 const secret = process.env.JWT_SECRET || "my-secret";
 
@@ -26,7 +25,7 @@ app.use(
 );
 
 console.log(
-  "\n\nIF THIS THROWS AN ERROR -\nMAKE SURE YOU ARE ALLOWED TO OPEN PORT 3050!\n\n"
+  `\n\nIF THIS THROWS AN ERROR -\nMAKE SURE YOU ARE ALLOWED TO OPEN PORT ${appPort} !\n\n`
 );
 
 app.listen(appPort);
