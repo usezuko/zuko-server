@@ -22,6 +22,14 @@ endpoints.createUser = {
   description: "create user",
 };
 
+endpoints.createVaultIdToGroupId = {
+  url: "/v1/user/community",
+  method: "post",
+  middleware: [],
+  handler: userHandler.createVaultIdToGroupId,
+  description: "add a user (vault id) to a community (group id)",
+};
+
 endpoints.readUserByVaultId = {
   url: "/v1/user/:vault_id",
   method: "get",
@@ -43,15 +51,23 @@ endpoints.createCommunity = {
   method: "post",
   middleware: [],
   handler: communityHandler.create,
-  description: "create user",
+  description: "create community",
 };
 
 endpoints.readCommunityByGroupId = {
-  url: "/v1/community/:group_id",
+  url: "/v1/community/group/:group_id",
   method: "get",
   middleware: [],
   handler: communityHandler.readByGroupId,
-  description: "read user by group id",
+  description: "read community by group id",
+};
+
+endpoints.readCommunityByVaultId = {
+  url: "/v1/community/vault/:vault_id",
+  method: "get",
+  middleware: [],
+  handler: communityHandler.readCommunityByVaultId,
+  description: "read community by user (vault id)",
 };
 
 endpoints.createInvite = {

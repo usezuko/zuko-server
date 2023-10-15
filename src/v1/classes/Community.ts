@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const communityTable = process.env.TABLELAND_COMMUNITY_DATABASE;
+const userCommunityTable = process.env.TABLELAND_USER_COMMUNITY_DATABASE;
 
 class Community {
   success?: boolean;
@@ -98,6 +99,36 @@ class Community {
 
         if (results.results.length === 0) {
           reject("No community object found from group id");
+        } else {
+          resolve(results);
+        }
+      } catch (e: any) {
+        console.log(e);
+        reject({
+          success: false,
+          message: e.message,
+          cause: e.cause.message,
+        });
+      }
+    });
+  };
+
+  // @returns list of communities by that vaultId
+  readCommunityByVaultId = async (
+    vault_id: string
+  ): Promise<Community[] | undefined> => {
+    const community = this;
+    return new Promise<Community[] | undefined>(async (resolve, reject) => {
+      try {
+        const results: any = await db
+          .prepare(`SELECT * FROM ${userCommunityTable} WHERE vault_id = ?1`)
+          .bind(vault_id)
+          .all();
+
+        console.log(results, "heyloo");
+
+        if (results.results.length === 0) {
+          reject("No community object found from vault id");
         } else {
           resolve(results);
         }

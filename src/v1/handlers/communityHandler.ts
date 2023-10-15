@@ -33,6 +33,22 @@ const communityHandler = {
     }
   },
 
+  readCommunityByVaultId: async (req: Request, res: Response) => {
+    const vaultId = String(req.params.vault_id);
+    if (vaultId) {
+      const community = new Community();
+      try {
+        const communityList = await community.readCommunityByVaultId(vaultId);
+        res.status(200).send(communityList);
+      } catch (err) {
+        console.log(err, "Error: group id");
+        res.status(400).send(new ApiError(400, err));
+      }
+    } else {
+      res.status(404).send(new ApiError(404, "No vault id provided"));
+    }
+  },
+
   update: async (req: Request, res: Response) => {
     /*    const community = new Community();
        community.set(req.body);
