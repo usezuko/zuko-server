@@ -68,7 +68,7 @@ middleware.checkWhitelistedIpAddress = (
       return res.status(403).send("Forbidden");
     }
   } else {
-    console.log("WHITELISTED_IPS UNDEFINED.");
+    console.log("WHITELISTED_IPS undefined in ENV.");
   }
 };
 

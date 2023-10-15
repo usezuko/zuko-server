@@ -1,7 +1,6 @@
 import middleware from "./middleware";
 import userHandler from "./handlers/userHandler";
 import communityHandler from "./handlers/communityHandler";
-import inviteHandler from "./handlers/inviteHandler";
 import { Express, Request, Response } from "express";
 import handleRootRequest from "./handlers/rootHandler";
 
@@ -42,7 +41,7 @@ endpoints.createVaultIdToGroupId = {
 endpoints.readUserByVaultId = {
   url: "/v1/user/:vault_id",
   method: "get",
-  middleware: [middleware.checkWhitelistedIpAddress],
+  middleware: [],
   handler: userHandler.readByVaultId,
   description: "read user by vault id",
 };
@@ -77,22 +76,6 @@ endpoints.readCommunityByVaultId = {
   middleware: [],
   handler: communityHandler.readCommunityByVaultId,
   description: "read community by user (vault id)",
-};
-
-endpoints.createInvite = {
-  url: "/v1/invite",
-  method: "post",
-  middleware: [],
-  handler: inviteHandler.create,
-  description: "create invite",
-};
-
-endpoints.readInvite = {
-  url: "/v1/invite/:inviteLink",
-  method: "get",
-  middleware: [],
-  handler: inviteHandler.read,
-  description: "read invite by invite link",
 };
 
 export default endpoints;

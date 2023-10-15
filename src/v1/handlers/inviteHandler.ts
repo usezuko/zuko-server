@@ -70,18 +70,6 @@ const inviteHandler = {
                 res.status(403).send(new ApiError(403, "Access denied"));
             } */
     },
-
-    loginUser: async (req: Request, res: Response) => {
-        /*      const serviceprovider_name = req.params.serviceprovider_name;
-             const user = new User();
-     
-             try {
-                 const result = await user.loginUser(serviceprovider_name);
-                 res.status(200).send(result);
-             } catch (reason) {
-                 res.status(400).send(new ApiError(400, reason));
-             } */
-    },
 };
 
 export default inviteHandler;

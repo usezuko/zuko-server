@@ -1,7 +1,7 @@
 {
   "name": "zuko-server",
-  "version": "1.0.0",
-  "description": "Zuko backend server to query Tableland tables",
+  "version": "1.1.0",
+  "description": "Zuko backend server to query on-chain tables from Tableland.",
   "main": "index.js",
   "scripts": {
     "start": "tsc && node dist/index.js",
@@ -9,7 +9,6 @@
     "reinstall": "rm -rf dist && rm -rf node_modules && rm package-lock.json && npm i",
     "build": "tsc"
   },
-  "keywords": [],
   "author": "Dan Wee, Johanna Fransson, Thomas Humphreys",
   "license": "ISC",
   "dependencies": {
