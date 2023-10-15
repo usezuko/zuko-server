@@ -6,6 +6,7 @@ import { claims } from "../../constants";
 
 import {
   AuthType,
+  ClaimRequest,
   ClaimType,
   SismoConnect,
   SismoConnectVerifiedResult,
@@ -13,6 +14,7 @@ import {
 
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import helper from "../helper";
 dotenv.config();
 
 const userHandler = {
@@ -69,16 +71,15 @@ const userHandler = {
         var token = jwt.sign(vaultId, process.env.JWT_SECRET || "default-secret");
         const existingUser = await user.readByVaultId(vaultId)
         if (existingUser?.username) {
+          await helper.setUserToCommunity(result.claims, vaultId)
           res
             .status(200)
             .send({ user: existingUser, jwt: token, newUser: false });
         } else {
-          //TODO: create user in db with vaultId
-          //redirect to signup page in frontend
-          //set community id and user id here, community.create(groupId, userId, name, description)
+          //Set the user to be a part of community he/she is eligable for
+          await helper.setUserToCommunity(result.claims, vaultId)
           res.status(200).send({ vaultId: vaultId, jwt: token, newUser: true });
 
-          //const result = await user.create();
         }
       } else {
         res.status(400).send(new ApiError(400, "Invalid auth response"));
@@ -141,6 +142,12 @@ const userHandler = {
           res.status(403).send(new ApiError(403, "Access denied"));
         } */
   },
+
+
+
+
+
+
 };
 
 export default userHandler;

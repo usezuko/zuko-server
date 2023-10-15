@@ -106,7 +106,13 @@ class User {
           .all();
 
         if (results.length > 0) {
-          reject("user is already a part of that community");
+
+          const userAlreadyInCommunity = {
+            success: true,
+            vault_id: vault_id,
+            group_id: group_id,
+          };
+          resolve(userAlreadyInCommunity);
         } else {
           // Insert a row into the table
           const { error, meta: insert } = await db
