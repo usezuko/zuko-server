@@ -62,7 +62,7 @@ middleware.checkWhitelistedIpAddress = (
   if (whitelistedIPs) {
     const whitelistedIpList = whitelistedIPs.split(",");
     const clientIP = req.ip;
-    console.log(req.ip);
+    console.log(req.ip, req);
     if (whitelistedIpList.includes(clientIP)) {
       return next();
     } else {

@@ -16,13 +16,15 @@ const jwtMiddleware = jwt({
   algorithms: ["HS256"],
 }).unless({ path: ["/v1/user", "/v1/user/login"], method: ["POST", "GET"] });
 
-app.use(
-  cors(),
-  json({ limit: "5mb" }),
-  jwtMiddleware,
-  urlencoded({ extended: true }),
-  v1
-);
+app
+  .use(
+    cors(),
+    json({ limit: "5mb" }),
+    jwtMiddleware,
+    urlencoded({ extended: true }),
+    v1,
+  )
+  .set("trust proxy", true);
 
 console.log(
   `\n\nIF THIS THROWS AN ERROR -\nMAKE SURE YOU ARE ALLOWED TO OPEN PORT ${appPort} !\n\n`
