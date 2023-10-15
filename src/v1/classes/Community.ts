@@ -125,8 +125,6 @@ class Community {
           .bind(vault_id)
           .all();
 
-        console.log(results, "heyloo");
-
         if (results.results.length === 0) {
           reject("No community object found from vault id");
         } else {
