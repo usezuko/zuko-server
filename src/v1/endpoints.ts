@@ -3,6 +3,7 @@ import userHandler from "./handlers/userHandler";
 import communityHandler from "./handlers/communityHandler";
 import inviteHandler from "./handlers/inviteHandler";
 import { Express, Request, Response } from "express";
+import handleRootRequest from "./handlers/rootHandler";
 
 type Endpoint = {
   url: string;
@@ -13,6 +14,14 @@ type Endpoint = {
 };
 
 const endpoints: Record<string, Endpoint> = {};
+
+endpoints.index = {
+  url: "/",
+  method: "get",
+  middleware: [],
+  handler: handleRootRequest,
+  description: "welcome",
+};
 
 endpoints.createUser = {
   url: "/v1/user",
