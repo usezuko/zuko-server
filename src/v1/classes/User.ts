@@ -156,7 +156,7 @@ class User {
           .all();
 
         if (results.results.length === 0) {
-          reject("No user object found from vault id");
+          resolve(undefined);
         } else {
           console.log(results, 'wats results?')
           resolve(results.results[0]);

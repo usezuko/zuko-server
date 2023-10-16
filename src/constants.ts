@@ -20,5 +20,15 @@ export const claims = [{
     isOptional: true,
     isSelectableByUser: true,
 },
+{
+    groupId: "0x3a49d2e9734722a24b127b610f894639", //zuko dev team
+    claimType: ClaimType.GTE,
+    value: 1,
+    isOptional: true,
+    isSelectableByUser: true,
+},
+
+
+
 
 ]

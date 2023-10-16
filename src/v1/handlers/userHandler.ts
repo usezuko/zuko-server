@@ -49,9 +49,13 @@ const userHandler = {
     const simsoConnectResponse = req.body; // get the zk proof
     console.log(simsoConnectResponse.proofs, "sismoooo connect res");
 
+
     const sismoConnect = SismoConnect({
       config: {
         appId: "0x1224f1ca77f3c19432034f998bcac8bb" || "",
+        /*    vault: {
+             impersonate: ["dhadrien.sismo.eth", "jebus.eth"],
+           }, */
       },
     });
 
@@ -65,6 +69,7 @@ const userHandler = {
         }
       );
       console.log(result, "result of sismo connect verified resu");
+      console.log()
 
       const vaultId = result.getUserId(AuthType.VAULT);
       if (vaultId) {
@@ -78,6 +83,7 @@ const userHandler = {
         } else {
           //Set the user to be a part of community he/she is eligable for
           await helper.setUserToCommunity(result.claims, vaultId)
+          console.log('NEW USERRRR')
           res.status(200).send({ vaultId: vaultId, jwt: token, newUser: true });
 
         }
