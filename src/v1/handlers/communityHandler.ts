@@ -17,6 +17,17 @@ const communityHandler = {
     }
   },
 
+  read: async (req: Request, res: Response) => {
+    const community = new Community();
+    try {
+      const communities = await community.read();
+      res.status(200).send(communities);
+    } catch (err) {
+      console.log(err, "Error: read");
+      res.status(400).send(new ApiError(400, err));
+    }
+  },
+
   readByGroupId: async (req: Request, res: Response) => {
     const groupId = String(req.params.group_id);
     if (groupId) {

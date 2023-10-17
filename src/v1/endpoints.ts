@@ -62,6 +62,14 @@ endpoints.createCommunity = {
   description: "create community",
 };
 
+endpoints.readCommunity = {
+  url: "/v1/community",
+  method: "get",
+  middleware: [],
+  handler: communityHandler.read,
+  description: "read all communities",
+};
+
 endpoints.readCommunityByGroupId = {
   url: "/v1/community/group/:group_id",
   method: "get",

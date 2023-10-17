@@ -85,6 +85,32 @@ class Community {
     });
   };
 
+  // get all communities
+  read = async (): Promise<Community[] | undefined> => {
+    const community = this;
+    return new Promise<Community[] | undefined>(async (resolve, reject) => {
+      try {
+        const results: any = await db
+          .prepare(`SELECT * FROM ${communityTable}`)
+          .bind()
+          .all();
+
+        if (results.results.length === 0) {
+          reject("No communities found");
+        } else {
+          resolve(results);
+        }
+      } catch (e: any) {
+        console.log(e);
+        reject({
+          success: false,
+          message: e.message,
+          cause: e.cause.message,
+        });
+      }
+    });
+  };
+
   // get community by group id
   readByGroupId = async (
     group_id: string
