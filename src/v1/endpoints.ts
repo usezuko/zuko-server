@@ -38,6 +38,14 @@ endpoints.createVaultIdToGroupId = {
   description: "add a user (vault id) to a community (group id)",
 };
 
+endpoints.read = {
+  url: "/v1/user",
+  method: "get",
+  middleware: [],
+  handler: userHandler.read,
+  description: "read all users",
+};
+
 endpoints.readUserByVaultId = {
   url: "/v1/user/:vault_id",
   method: "get",

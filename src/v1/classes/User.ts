@@ -106,7 +106,6 @@ class User {
           .all();
 
         if (results.length > 0) {
-
           const userAlreadyInCommunity = {
             success: true,
             vault_id: vault_id,
@@ -145,9 +144,34 @@ class User {
     });
   };
 
+  // get all users
+  read = async (): Promise<User | undefined> => {
+    return new Promise<User | undefined>(async (resolve, reject) => {
+      try {
+        const results: any = await db
+          .prepare(`SELECT * FROM ${userTable}`)
+          .bind()
+          .all();
+
+        if (results.results.length === 0) {
+          resolve(undefined);
+        } else {
+          resolve(results.results);
+        }
+      } catch (e: any) {
+        console.log(e);
+        reject({
+          success: false,
+          message: e.message,
+          cause: e.cause.message,
+        });
+      }
+    });
+  };
+
   // get users by vault_id
   readByVaultId = async (vault_id: string): Promise<User | undefined> => {
-    console.log(vault_id, 'wats vault id?')
+    console.log(vault_id, "wats vault id?");
     return new Promise<User | undefined>(async (resolve, reject) => {
       try {
         const results: any = await db
@@ -158,7 +182,7 @@ class User {
         if (results.results.length === 0) {
           resolve(undefined);
         } else {
-          console.log(results, 'wats results?')
+          console.log(results, "wats results?");
           resolve(results.results[0]);
         }
       } catch (e: any) {

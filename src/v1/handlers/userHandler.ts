@@ -49,7 +49,6 @@ const userHandler = {
     const simsoConnectResponse = req.body; // get the zk proof
     console.log(simsoConnectResponse.proofs, "sismoooo connect res");
 
-
     const sismoConnect = SismoConnect({
       config: {
         appId: "0x1224f1ca77f3c19432034f998bcac8bb" || "",
@@ -58,7 +57,6 @@ const userHandler = {
            }, */
       },
     });
-
 
     try {
       const result: SismoConnectVerifiedResult = await sismoConnect.verify(
@@ -69,23 +67,25 @@ const userHandler = {
         }
       );
       console.log(result, "result of sismo connect verified resu");
-      console.log()
+      console.log();
 
       const vaultId = result.getUserId(AuthType.VAULT);
       if (vaultId) {
-        var token = jwt.sign(vaultId, process.env.JWT_SECRET || "default-secret");
-        const existingUser = await user.readByVaultId(vaultId)
+        var token = jwt.sign(
+          vaultId,
+          process.env.JWT_SECRET || "default-secret"
+        );
+        const existingUser = await user.readByVaultId(vaultId);
         if (existingUser?.username) {
-          await helper.setUserToCommunity(result.claims, vaultId)
+          await helper.setUserToCommunity(result.claims, vaultId);
           res
             .status(200)
             .send({ user: existingUser, jwt: token, newUser: false });
         } else {
           //Set the user to be a part of community he/she is eligable for
-          await helper.setUserToCommunity(result.claims, vaultId)
-          console.log('NEW USERRRR')
+          await helper.setUserToCommunity(result.claims, vaultId);
+          console.log("NEW USERRRR");
           res.status(200).send({ vaultId: vaultId, jwt: token, newUser: true });
-
         }
       } else {
         res.status(400).send(new ApiError(400, "Invalid auth response"));
@@ -94,6 +94,17 @@ const userHandler = {
       console.log(error, "Error with verifying zk proof");
 
       res.status(500).send(new ApiError(500, "Error with verifying zk proof"));
+    }
+  },
+
+  read: async (req: Request, res: Response) => {
+    const user = new User();
+    try {
+      const users = await user.read();
+      res.status(200).send(users);
+    } catch (err) {
+      console.log(err, "Error: read");
+      res.status(400).send(new ApiError(400, err));
     }
   },
 
@@ -148,12 +159,6 @@ const userHandler = {
           res.status(403).send(new ApiError(403, "Access denied"));
         } */
   },
-
-
-
-
-
-
 };
 
 export default userHandler;
