@@ -3,7 +3,7 @@ import { Wallet, getDefaultProvider } from "ethers";
 import dotenv from "dotenv";
 dotenv.config();
 
-const arbGoerli = "https://arbitrum-goerli.public.blastapi.io";
+const arbGoerli = `https://arb-goerli.g.alchemy.com/v2/${process.env.RPC_ARB_TESTNET}`;
 const ethSepolia = "https://ethereum-sepolia.publicnode.com";
 
 const wallet = new Wallet(process.env.WALLET_PRIVATE_KEY || "");
