@@ -1,8 +1,9 @@
+import { Express, Request, Response } from "express";
 import middleware from "./middleware";
+import handleRootRequest from "./handlers/rootHandler";
 import userHandler from "./handlers/userHandler";
 import communityHandler from "./handlers/communityHandler";
-import { Express, Request, Response } from "express";
-import handleRootRequest from "./handlers/rootHandler";
+import postHandler from "./handlers/postHandler";
 
 type Endpoint = {
   url: string;
@@ -22,6 +23,7 @@ endpoints.index = {
   description: "welcome",
 };
 
+// USER
 endpoints.createUser = {
   url: "/v1/user",
   method: "post",
@@ -38,7 +40,7 @@ endpoints.createVaultIdToGroupId = {
   description: "add a user (vault id) to a community (group id)",
 };
 
-endpoints.read = {
+endpoints.readUser = {
   url: "/v1/user",
   method: "get",
   middleware: [],
@@ -62,6 +64,7 @@ endpoints.authUser = {
   description: "authenticate user",
 };
 
+// COMMUNITY
 endpoints.createCommunity = {
   url: "/v1/community",
   method: "post",
@@ -92,6 +95,32 @@ endpoints.readCommunityByVaultId = {
   middleware: [],
   handler: communityHandler.readCommunityByVaultId,
   description: "read community by user (vault id)",
+};
+
+// POSTS
+endpoints.createPost = {
+  url: "/v1/post",
+  method: "post",
+  middleware: [middleware.checkWhitelistedIpAddress],
+  handler: postHandler.create,
+  description: "create a post",
+};
+
+endpoints.readPostByGroupId = {
+  url: "/v1/post/:group_id",
+  method: "get",
+  middleware: [],
+  handler: postHandler.read,
+  description: "read all posts by group id",
+};
+
+endpoints.updatePost = {
+  url: "/v1/post/",
+  method: "put",
+  middleware: [],
+  handler: postHandler.update,
+  description:
+    "update a post (title, content, likes_count, comments_count) by group id",
 };
 
 export default endpoints;

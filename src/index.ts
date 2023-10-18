@@ -14,7 +14,10 @@ const appPort = process.env.PORT || 3050;
 const jwtMiddleware = jwt({
   secret: secret,
   algorithms: ["HS256"],
-}).unless({ path: ["/v1/user", "/v1/user/login"], method: ["POST", "GET"] });
+}).unless({
+  path: ["/v1/user", "/v1/user/login"],
+  method: ["POST", "GET", "PUT"],
+});
 
 app
   .use(
@@ -22,7 +25,7 @@ app
     json({ limit: "5mb" }),
     jwtMiddleware,
     urlencoded({ extended: true }),
-    v1,
+    v1
   )
   .set("trust proxy", true);
 
