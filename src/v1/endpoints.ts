@@ -109,7 +109,7 @@ endpoints.createPost = {
 endpoints.readPostByGroupId = {
   url: "/v1/post/:group_id",
   method: "get",
-  middleware: [],
+  middleware: [middleware.checkWhitelistedIpAddress],
   handler: postHandler.read,
   description: "read all posts by group id",
 };
@@ -117,7 +117,7 @@ endpoints.readPostByGroupId = {
 endpoints.updatePost = {
   url: "/v1/post/",
   method: "put",
-  middleware: [],
+  middleware: [middleware.checkWhitelistedIpAddress],
   handler: postHandler.update,
   description:
     "update a post (title, content, likes_count, comments_count) by group id",
