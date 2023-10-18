@@ -105,11 +105,12 @@ class Post {
       try {
         const { error, meta: insert } = await db
           .prepare(
-            `UPDATE ${postTable} SET 
-            title = CASE WHEN ?1 IS NOT NULL THEN ?1 ELSE title END,
-            content = CASE WHEN ?2 IS NOT NULL THEN ?2 ELSE content END,
-            likes_count = CASE WHEN ?3 IS NOT NULL THEN ?3 ELSE likes_count END,
-            comments_count = CASE WHEN ?4 IS NOT NULL THEN ?4 ELSE comments_count END
+            `UPDATE ${postTable}
+            SET
+                title = COALESCE(?1, title),
+                content = COALESCE(?2, content),
+                likes_count = COALESCE(?3, likes_count),
+                comments_count = COALESCE(?4, comments_count)
             WHERE post_id = ?5;`
           )
           .bind(
