@@ -16,7 +16,7 @@ const jwtMiddleware = jwt({
   algorithms: ["HS256"],
 }).unless({
   path: ["/v1/user", "/v1/user/login"],
-  method: ["POST", "GET", "PUT"],
+  method: ["POST", "GET", "PUT", "DELETE"],
 });
 
 app

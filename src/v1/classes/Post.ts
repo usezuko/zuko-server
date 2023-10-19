@@ -30,8 +30,8 @@ class Post {
       this.title = post.title;
       this.content = post.content;
       this.timestamp = currentTimestamp;
-      this.likes_count = post.likes_count;
-      this.comments_count = post.comments_count;
+      this.likes_count = 0;
+      this.comments_count = 0;
       this.vault_id = post.vault_id;
       this.group_id = post.group_id;
     }
@@ -44,12 +44,14 @@ class Post {
       try {
         const { error, meta: insert } = await db
           .prepare(
-            `INSERT INTO ${postTable} (title, content, timestamp, vault_id, group_id) VALUES (?, ?, ?, ?, ?);`
+            `INSERT INTO ${postTable} (title, content, timestamp, likes_count, comments_count, vault_id, group_id) VALUES (?, ?, ?, ?, ?, ?, ?);`
           )
           .bind(
             post.title,
             post.content,
             post.timestamp,
+            post.likes_count,
+            post.comments_count,
             post.vault_id,
             post.group_id
           )

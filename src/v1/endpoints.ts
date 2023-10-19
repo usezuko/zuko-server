@@ -4,6 +4,7 @@ import handleRootRequest from "./handlers/rootHandler";
 import userHandler from "./handlers/userHandler";
 import communityHandler from "./handlers/communityHandler";
 import postHandler from "./handlers/postHandler";
+import commentHandler from "./handlers/commentHandler";
 
 type Endpoint = {
   url: string;
@@ -97,13 +98,13 @@ endpoints.readCommunityByVaultId = {
   description: "read community by user (vault id)",
 };
 
-// POSTS
+// POST
 endpoints.createPost = {
   url: "/v1/post",
   method: "post",
   middleware: [middleware.checkWhitelistedIpAddress],
   handler: postHandler.create,
-  description: "create a post",
+  description: "create a post to a group",
 };
 
 endpoints.readPostByGroupId = {
@@ -122,5 +123,31 @@ endpoints.updatePost = {
   description:
     "update a post (title, content, likes_count, comments_count) by group id",
 };
+
+// COMMENT
+endpoints.createComment = {
+  url: "/v1/comment",
+  method: "post",
+  middleware: [middleware.checkWhitelistedIpAddress],
+  handler: commentHandler.create,
+  description: "create a comment for a post",
+};
+
+endpoints.readComment = {
+  url: "/v1/comment/:post_id",
+  method: "get",
+  middleware: [middleware.checkWhitelistedIpAddress],
+  handler: commentHandler.read,
+  description: "read all comments for a post",
+};
+
+// TODO: @dev figure out how to decrement comment from post - maybe need to pass in?
+// endpoints.deleteComment = {
+//   url: "/v1/comment/:comment_id",
+//   method: "delete",
+//   middleware: [middleware.checkWhitelistedIpAddress],
+//   handler: commentHandler.delete,
+//   description: "delete a comment",
+// };
 
 export default endpoints;
