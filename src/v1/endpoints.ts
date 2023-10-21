@@ -5,6 +5,7 @@ import userHandler from "./handlers/userHandler";
 import communityHandler from "./handlers/communityHandler";
 import postHandler from "./handlers/postHandler";
 import commentHandler from "./handlers/commentHandler";
+import likeHandler from "./handlers/likeHandler";
 
 type Endpoint = {
   url: string;
@@ -142,12 +143,29 @@ endpoints.readComment = {
 };
 
 // TODO: @dev figure out how to decrement comment from post - maybe need to pass in?
-// endpoints.deleteComment = {
-//   url: "/v1/comment/:comment_id",
-//   method: "delete",
-//   middleware: [middleware.checkWhitelistedIpAddress],
-//   handler: commentHandler.delete,
-//   description: "delete a comment",
-// };
+/* endpoints.deleteComment = {
+  url: "/v1/comment/:comment_id",
+  method: "delete",
+  middleware: [middleware.checkWhitelistedIpAddress],
+  handler: commentHandler.delete,
+  description: "delete a comment",
+}; */
+
+// LIKES
+endpoints.likePost = {
+  url: "/v1/like/post",
+  method: "post",
+  middleware: [middleware.checkWhitelistedIpAddress],
+  handler: likeHandler.post,
+  description: "like a post by vault id",
+};
+
+endpoints.likeComment = {
+  url: "/v1/like/comment",
+  method: "post",
+  middleware: [middleware.checkWhitelistedIpAddress],
+  handler: likeHandler.comment,
+  description: "like a comment by vault id",
+};
 
 export default endpoints;

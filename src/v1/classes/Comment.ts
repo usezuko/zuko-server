@@ -42,12 +42,13 @@ class Comment {
         const result = await db.batch([
           db
             .prepare(
-              `INSERT INTO ${commentTable} (post_id, vault_id, content, timestamp) VALUES (?, ?, ?, ?);`
+              `INSERT INTO ${commentTable} (post_id, vault_id, content, likes_count, timestamp) VALUES (?, ?, ?, ?, ?);`
             )
             .bind(
               comment.post_id,
               comment.vault_id,
               comment.content,
+              comment.likes_count,
               comment.timestamp
             ),
           db
@@ -144,40 +145,37 @@ class Comment {
   // delete a comment
   delete = async (comment_id: number): Promise<Object> => {
     return new Promise<Object>(async (resolve, reject) => {
-    //   try {
-    //     const result = await db.batch([
-    //       db
-    //         .prepare(`DELETE FROM ${commentTable} WHERE comment_id = ?1;`)
-    //         .bind(comment_id),
-    //       db
-    //         .prepare(
-    //           `UPDATE ${postTable} SET comments_count = comments_count - 1 WHERE post_id = ?;`
-    //         )
-    //         .bind(comment.post_id),
-    //     ]);
-
-    //     // const status = await insert.txn?.wait();
-    //     // console.log(status);
-
-    //     const { results } = await db
-    //       .prepare(
-    //         `SELECT * FROM ${commentTable} WHERE comment_id = ${comment_id};`
-    //       )
-    //       .all();
-
-    //     if (results.length === 0) {
-    //       resolve({ success: true } || "undefined");
-    //     } else {
-    //       resolve({ success: false } || "undefined");
-    //     }
-    //   } catch (e: any) {
-    //     console.log(e);
-    //     reject({
-    //       success: false,
-    //       message: e.message,
-    //       cause: e.cause.message,
-    //     });
-    //   }
+      //   try {
+      //     const result = await db.batch([
+      //       db
+      //         .prepare(`DELETE FROM ${commentTable} WHERE comment_id = ?1;`)
+      //         .bind(comment_id),
+      //       db
+      //         .prepare(
+      //           `UPDATE ${postTable} SET comments_count = comments_count - 1 WHERE post_id = ?;`
+      //         )
+      //         .bind(comment.post_id),
+      //     ]);
+      //     // const status = await insert.txn?.wait();
+      //     // console.log(status);
+      //     const { results } = await db
+      //       .prepare(
+      //         `SELECT * FROM ${commentTable} WHERE comment_id = ${comment_id};`
+      //       )
+      //       .all();
+      //     if (results.length === 0) {
+      //       resolve({ success: true } || "undefined");
+      //     } else {
+      //       resolve({ success: false } || "undefined");
+      //     }
+      //   } catch (e: any) {
+      //     console.log(e);
+      //     reject({
+      //       success: false,
+      //       message: e.message,
+      //       cause: e.cause.message,
+      //     });
+      //   }
     });
   };
 }
