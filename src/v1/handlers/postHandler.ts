@@ -17,10 +17,11 @@ const postHandler = {
 
   read: async (req: Request, res: Response) => {
     const post = new Post();
-    post.set(req.body);
+    const group_id = String(req.params.group_id);
+    const vault_id = String(req.params.vault_id);
 
     try {
-      const posts = await post.read();
+      const posts = await post.read(group_id, vault_id);
       res.status(200).send(posts);
     } catch (err) {
       res.status(400).send(new ApiError(400, "Error" + err));

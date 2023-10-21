@@ -79,8 +79,8 @@ class Post {
   };
 
   // read all posts by group_id
-  read = async (): Promise<Post | Object> => {
-    const post = this;
+  read = async (group_id: string, vault_id: string): Promise<Post | Object> => {
+    // const post = this;
     return new Promise<Post | Object>(async (resolve, reject) => {
       try {
         const { results } = await db
@@ -97,7 +97,7 @@ class Post {
             WHERE p.group_id = ?2
             ORDER BY p.post_id DESC`
           )
-          .bind(post.vault_id, post.group_id)
+          .bind(vault_id, group_id)
           .all();
 
         resolve(results);

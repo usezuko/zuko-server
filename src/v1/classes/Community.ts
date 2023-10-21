@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const communityTable = process.env.TABLELAND_COMMUNITY_DATABASE;
+const userTable = process.env.TABLELAND_COMMUNITY_DATABASE;
 const userCommunityTable = process.env.TABLELAND_USER_COMMUNITY_DATABASE;
 
 class Community {
@@ -148,6 +149,15 @@ class Community {
       try {
         const results: any = await db
           .prepare(`SELECT * FROM ${userCommunityTable} WHERE vault_id = ?1`)
+          // .prepare(
+          //   `SELECT 
+          //     uc.*,
+          //     u.username
+          //   FROM ${userCommunityTable} uc
+          //   LEFT JOIN ${userTable} AS u
+          //   ON uc.vault_id = u.vault_id
+          //   WHERE uc.vault_id = ?1`
+          // )
           .bind(vault_id)
           .all();
 

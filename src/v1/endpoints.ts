@@ -109,7 +109,7 @@ endpoints.createPost = {
 };
 
 endpoints.readPostByGroupId = {
-  url: "/v1/post/",
+  url: "/v1/post/:group_id/user/:vault_id",
   method: "get",
   middleware: [middleware.checkWhitelistedIpAddress],
   handler: postHandler.read,

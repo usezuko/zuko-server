@@ -140,9 +140,9 @@ class Like {
         const result = await db.batch([
           db
             .prepare(
-              `DELETE FROM ${likeTable} WHERE vault_id = ?1 AND post_id = ${this.post_id}`
+              `DELETE FROM ${likeTable} WHERE vault_id = ?1 AND post_id = ?2`
             )
-            .bind(this.vault_id),
+            .bind(this.vault_id, this.post_id),
           db
             .prepare(
               `UPDATE ${postTable} SET likes_count = likes_count - 1 WHERE post_id = ?;`

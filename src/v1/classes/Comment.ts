@@ -86,9 +86,6 @@ class Comment {
     return new Promise<Object | Array<number>>(async (resolve, reject) => {
       try {
         const { results } = await db
-          // .prepare(
-          //   `SELECT * FROM ${commentTable} WHERE post_id = ?1 ORDER BY timestamp`
-          // )
           .prepare(
             `SELECT 
               c.*,
