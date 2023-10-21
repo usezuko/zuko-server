@@ -132,15 +132,63 @@ class Like {
     });
   };
 
-  delete = async (id: number): Promise<void> => {
-    // const promise = new Promise<void>((resolve, reject) => {
-    //   if (id) {
-    //   } else {
-    //     reject(new ApiError(400, "Missing like id"));
-    //   }
-    // });
-    // return promise;
+  // undo like from post
+  deletePost = async (): Promise<Object | Boolean> => {
+    return new Promise<Object | Boolean>(async (resolve, reject) => {
+      try {
+        const result = await db.batch([
+          db
+            .prepare(
+              `DELETE FROM ${likeTable} WHERE vault_id = ?1 AND post_id = ${this.post_id}`
+            )
+            .bind(this.vault_id),
+          db
+            .prepare(
+              `UPDATE ${postTable} SET likes_count = likes_count - 1 WHERE post_id = ?;`
+            )
+            .bind(this.post_id),
+        ]);
+
+        result ? resolve(result) : reject("tx failed");
+      } catch (e: any) {
+        console.log(e);
+        reject({
+          success: false,
+          message: e.message,
+          cause: e.cause.message,
+        });
+      }
+    });
   };
+
+    // undo like from comment
+    deleteComment = async (): Promise<Object | Boolean> => {
+      return new Promise<Object | Boolean>(async (resolve, reject) => {
+        try {
+          const result = await db.batch([
+            db
+              .prepare(
+                `DELETE FROM ${likeTable} WHERE vault_id = ?1 AND comment_id = ${this.comment_id}`
+              )
+              .bind(this.vault_id),
+            db
+              .prepare(
+                `UPDATE ${commentTable} SET likes_count = likes_count - 1 WHERE comment_id = ?;`
+              )
+              .bind(this.comment_id),
+          ]);
+  
+          result ? resolve(result) : reject("tx failed");
+        } catch (e: any) {
+          console.log(e);
+          reject({
+            success: false,
+            message: e.message,
+            cause: e.cause.message,
+          });
+        }
+      });
+    };
 }
 
 export default Like;

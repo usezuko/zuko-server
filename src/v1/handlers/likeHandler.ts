@@ -18,7 +18,7 @@ const postHandler = {
     // }
   },
 
-  post: async (req: Request, res: Response) => {
+  createPost: async (req: Request, res: Response) => {
     const like = new Like();
     like.set(req.body);
 
@@ -30,7 +30,7 @@ const postHandler = {
     }
   },
 
-  comment: async (req: Request, res: Response) => {
+  createComment: async (req: Request, res: Response) => {
     const like = new Like();
     like.set(req.body);
 
@@ -42,24 +42,28 @@ const postHandler = {
     }
   },
 
-  // todo: delete a like by post_id
-  delete: async (req: Request, res: Response) => {
-    /*     const id = req.params.id;
-            const userId = req.apiSession.userid;
-    
-            if (id == userId) {
-                const user = new User();
-                try {
-                    const userData = await user.read(id);
-                    await user.delete();
-    
-                    res.status(200).send({});
-                } catch (reject) {
-                    res.status(400).send(new ApiError(400, reject));
-                }
-            } else {
-                res.status(403).send(new ApiError(403, "Access denied"));
-            } */
+  deletePost: async (req: Request, res: Response) => {
+    const like = new Like();
+    like.set(req.body);
+
+    try {
+      const unlikeRes = await like.deletePost();
+      res.status(200).send(unlikeRes);
+    } catch (err) {
+      res.status(400).send(new ApiError(400, err));
+    }
+  },
+
+  deleteComment: async (req: Request, res: Response) => {
+    const like = new Like();
+    like.set(req.body);
+
+    try {
+      const unlikeRes = await like.deleteComment();
+      res.status(200).send(unlikeRes);
+    } catch (err) {
+      res.status(400).send(new ApiError(400, err));
+    }
   },
 };
 

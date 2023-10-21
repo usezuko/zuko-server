@@ -156,7 +156,7 @@ endpoints.likePost = {
   url: "/v1/like/post",
   method: "post",
   middleware: [middleware.checkWhitelistedIpAddress],
-  handler: likeHandler.post,
+  handler: likeHandler.createPost,
   description: "like a post by vault id",
 };
 
@@ -164,8 +164,24 @@ endpoints.likeComment = {
   url: "/v1/like/comment",
   method: "post",
   middleware: [middleware.checkWhitelistedIpAddress],
-  handler: likeHandler.comment,
+  handler: likeHandler.createComment,
   description: "like a comment by vault id",
+};
+
+endpoints.unlikePost = {
+  url: "/v1/like/post",
+  method: "delete",
+  middleware: [middleware.checkWhitelistedIpAddress],
+  handler: likeHandler.deletePost,
+  description: "undo like a post by vault id",
+};
+
+endpoints.unlikeComment = {
+  url: "/v1/like/comment",
+  method: "delete",
+  middleware: [middleware.checkWhitelistedIpAddress],
+  handler: likeHandler.deleteComment,
+  description: "undo like a comment by vault id",
 };
 
 export default endpoints;
