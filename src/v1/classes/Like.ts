@@ -6,6 +6,7 @@ dotenv.config();
 const likeTable = process.env.TABLELAND_LIKE_DATABASE;
 const postTable = process.env.TABLELAND_POST_DATABASE;
 const commentTable = process.env.TABLELAND_COMMENT_DATABASE;
+const userTable = process.env.TABLELAND_USER_DATABASE;
 
 class Like {
   post_id?: number;
@@ -48,6 +49,39 @@ class Like {
       //       cause: e.cause.message,
       //     });
       //   }
+    });
+  };
+
+  readPost = async (): Promise<Object> => {
+    const post = this;
+    return new Promise<Object>(async (resolve, reject) => {
+      try {
+        const posts = await db
+          .prepare(
+            `SELECT 
+            p.*,
+            l.like_id IS NOT NULL AS hasLiked,
+            u.username
+          FROM ${postTable} p
+          LEFT JOIN ${likeTable} AS l
+          ON p.post_id = l.post_id AND l.vault_id = ?1
+          LEFT JOIN ${userTable} AS u
+          ON p.vault_id = u.vault_id
+          WHERE p.group_id = ?2
+          ORDER BY p.post_id DESC`
+          )
+          .bind(post.vault_id, post.group_id)
+          .run();
+
+        resolve(posts);
+      } catch (e: any) {
+        console.log(e);
+        reject({
+          success: false,
+          message: e.message,
+          cause: e.cause.message,
+        });
+      }
     });
   };
 
@@ -161,34 +195,34 @@ class Like {
     });
   };
 
-    // undo like from comment
-    deleteComment = async (): Promise<Object | Boolean> => {
-      return new Promise<Object | Boolean>(async (resolve, reject) => {
-        try {
-          const result = await db.batch([
-            db
-              .prepare(
-                `DELETE FROM ${likeTable} WHERE vault_id = ?1 AND comment_id = ${this.comment_id}`
-              )
-              .bind(this.vault_id),
-            db
-              .prepare(
-                `UPDATE ${commentTable} SET likes_count = likes_count - 1 WHERE comment_id = ?;`
-              )
-              .bind(this.comment_id),
-          ]);
-  
-          result ? resolve(result) : reject("tx failed");
-        } catch (e: any) {
-          console.log(e);
-          reject({
-            success: false,
-            message: e.message,
-            cause: e.cause.message,
-          });
-        }
-      });
-    };
+  // undo like from comment
+  deleteComment = async (): Promise<Object | Boolean> => {
+    return new Promise<Object | Boolean>(async (resolve, reject) => {
+      try {
+        const result = await db.batch([
+          db
+            .prepare(
+              `DELETE FROM ${likeTable} WHERE vault_id = ?1 AND comment_id = ${this.comment_id}`
+            )
+            .bind(this.vault_id),
+          db
+            .prepare(
+              `UPDATE ${commentTable} SET likes_count = likes_count - 1 WHERE comment_id = ?;`
+            )
+            .bind(this.comment_id),
+        ]);
+
+        result ? resolve(result) : reject("tx failed");
+      } catch (e: any) {
+        console.log(e);
+        reject({
+          success: false,
+          message: e.message,
+          cause: e.cause.message,
+        });
+      }
+    });
+  };
 }
 
 export default Like;

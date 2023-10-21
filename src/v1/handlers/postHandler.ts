@@ -16,18 +16,14 @@ const postHandler = {
   },
 
   read: async (req: Request, res: Response) => {
-    const groupId = String(req.params.group_id);
+    const post = new Post();
+    post.set(req.body);
 
-    if (groupId) {
-      const post = new Post();
-      try {
-        const posts = await post.read(groupId);
-        res.status(200).send(posts);
-      } catch (err) {
-        res.status(400).send(new ApiError(400, "Error" + err));
-      }
-    } else {
-      res.status(403).send(new ApiError(403, "Error: group_id does not exist"));
+    try {
+      const posts = await post.read();
+      res.status(200).send(posts);
+    } catch (err) {
+      res.status(400).send(new ApiError(400, "Error" + err));
     }
   },
 

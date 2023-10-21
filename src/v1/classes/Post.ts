@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const postTable = process.env.TABLELAND_POST_DATABASE;
+const likeTable = process.env.TABLELAND_LIKE_DATABASE;
+const userTable = process.env.TABLELAND_USER_DATABASE;
 const currentTimestamp = Math.floor(new Date().getTime() / 1000);
 
 class Post {
@@ -77,15 +79,25 @@ class Post {
   };
 
   // read all posts by group_id
-  read = async (group_id: string): Promise<Post | Object> => {
+  read = async (): Promise<Post | Object> => {
     const post = this;
     return new Promise<Post | Object>(async (resolve, reject) => {
       try {
         const { results } = await db
           .prepare(
-            `SELECT * FROM ${postTable} WHERE group_id = ?1 ORDER BY post_id DESC`
+            `SELECT 
+              p.*,
+              l.like_id IS NOT NULL AS hasLiked,
+              u.username
+            FROM ${postTable} p
+            LEFT JOIN ${likeTable} AS l
+            ON p.post_id = l.post_id AND l.vault_id = ?1
+            LEFT JOIN ${userTable} AS u
+            ON p.vault_id = u.vault_id
+            WHERE p.group_id = ?2
+            ORDER BY p.post_id DESC`
           )
-          .bind(group_id)
+          .bind(post.vault_id, post.group_id)
           .all();
 
         resolve(results);

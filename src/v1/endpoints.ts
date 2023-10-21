@@ -109,7 +109,7 @@ endpoints.createPost = {
 };
 
 endpoints.readPostByGroupId = {
-  url: "/v1/post/:group_id",
+  url: "/v1/post/",
   method: "get",
   middleware: [middleware.checkWhitelistedIpAddress],
   handler: postHandler.read,
@@ -142,14 +142,7 @@ endpoints.readComment = {
   description: "read all comments for a post",
 };
 
-// TODO: @dev figure out how to decrement comment from post - maybe need to pass in?
-/* endpoints.deleteComment = {
-  url: "/v1/comment/:comment_id",
-  method: "delete",
-  middleware: [middleware.checkWhitelistedIpAddress],
-  handler: commentHandler.delete,
-  description: "delete a comment",
-}; */
+// todo: @dev decrement comment from post
 
 // LIKES
 endpoints.likePost = {
