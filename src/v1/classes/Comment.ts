@@ -5,6 +5,7 @@ dotenv.config();
 
 const commentTable = process.env.TABLELAND_COMMENT_DATABASE;
 const postTable = process.env.TABLELAND_POST_DATABASE;
+const userTable = process.env.TABLELAND_USER_DATABASE;
 const currentTimestamp = Math.floor(new Date().getTime() / 1000);
 
 class Comment {
@@ -85,9 +86,20 @@ class Comment {
     return new Promise<Object | Array<number>>(async (resolve, reject) => {
       try {
         const { results } = await db
+          // .prepare(
+          //   `SELECT * FROM ${commentTable} WHERE post_id = ?1 ORDER BY timestamp`
+          // )
           .prepare(
-            `SELECT * FROM ${commentTable} WHERE post_id = ?1 ORDER BY timestamp`
+            `SELECT 
+              c.*,
+              u.username
+            FROM ${commentTable} c
+            LEFT JOIN ${userTable} AS u
+            ON c.vault_id = u.vault_id
+            WHERE c.post_id = ?1
+            ORDER BY c.timestamp`
           )
+
           .bind(post_id)
           .all();
         resolve(results);

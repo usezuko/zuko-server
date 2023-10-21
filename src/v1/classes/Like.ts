@@ -52,39 +52,6 @@ class Like {
     });
   };
 
-  readPost = async (): Promise<Object> => {
-    const post = this;
-    return new Promise<Object>(async (resolve, reject) => {
-      try {
-        const posts = await db
-          .prepare(
-            `SELECT 
-            p.*,
-            l.like_id IS NOT NULL AS hasLiked,
-            u.username
-          FROM ${postTable} p
-          LEFT JOIN ${likeTable} AS l
-          ON p.post_id = l.post_id AND l.vault_id = ?1
-          LEFT JOIN ${userTable} AS u
-          ON p.vault_id = u.vault_id
-          WHERE p.group_id = ?2
-          ORDER BY p.post_id DESC`
-          )
-          .bind(post.vault_id, post.group_id)
-          .run();
-
-        resolve(posts);
-      } catch (e: any) {
-        console.log(e);
-        reject({
-          success: false,
-          message: e.message,
-          cause: e.cause.message,
-        });
-      }
-    });
-  };
-
   // like a post
   createPost = async (): Promise<Object | Boolean> => {
     return new Promise<Object | Boolean>(async (resolve, reject) => {
