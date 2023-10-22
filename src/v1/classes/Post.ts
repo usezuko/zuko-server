@@ -6,6 +6,7 @@ dotenv.config();
 const postTable = process.env.TABLELAND_POST_DATABASE;
 const likeTable = process.env.TABLELAND_LIKE_DATABASE;
 const userTable = process.env.TABLELAND_USER_DATABASE;
+const userCommunityTable = process.env.TABLELAND_USER_COMMUNITY_DATABASE;
 const currentTimestamp = Math.floor(new Date().getTime() / 1000);
 
 class Post {
@@ -80,7 +81,6 @@ class Post {
 
   // read all posts by group_id
   read = async (group_id: string, vault_id: string): Promise<Post | Object> => {
-    // const post = this;
     return new Promise<Post | Object>(async (resolve, reject) => {
       try {
         const { results } = await db
@@ -98,6 +98,43 @@ class Post {
             ORDER BY p.post_id DESC`
           )
           .bind(vault_id, group_id)
+          .all();
+
+        resolve(results);
+      } catch (e: any) {
+        console.log(e);
+        reject({
+          success: false,
+          message: e.message,
+          cause: e.cause.message,
+        });
+      }
+    });
+  };
+
+  // read all posts from all communities for a vault_id (descending order)
+  readAll = async (vault_id: string): Promise<Post | Object> => {
+    return new Promise<Post | Object>(async (resolve, reject) => {
+      try {
+        const { results } = await db
+          .prepare(
+            `SELECT 
+              p.*,
+              l.like_id IS NOT NULL AS hasLiked,
+              u.username
+            FROM ${postTable} p
+            LEFT JOIN ${likeTable} AS l
+            ON p.post_id = l.post_id AND l.vault_id = ?1
+            LEFT JOIN ${userTable} AS u
+            ON p.vault_id = u.vault_id
+            WHERE p.group_id IN (
+              SELECT group_id
+              FROM ${userCommunityTable}
+              WHERE vault_id = ?1
+            )
+            ORDER BY p.post_id DESC;`
+          )
+          .bind(vault_id)
           .all();
 
         resolve(results);

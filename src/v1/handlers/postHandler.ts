@@ -28,6 +28,18 @@ const postHandler = {
     }
   },
 
+  readAll: async (req: Request, res: Response) => {
+    const post = new Post();
+    const vault_id = String(req.params.vault_id);
+
+    try {
+      const posts = await post.readAll(vault_id);
+      res.status(200).send(posts);
+    } catch (err) {
+      res.status(400).send(new ApiError(400, "Error" + err));
+    }
+  },
+
   update: async (req: Request, res: Response) => {
     const post = new Post();
     post.set(req.body); // should be a post object

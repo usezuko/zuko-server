@@ -116,6 +116,15 @@ endpoints.readPostByGroupId = {
   description: "read all posts by group id",
 };
 
+endpoints.readAll = {
+  url: "/v1/post/user/:vault_id",
+  method: "get",
+  middleware: [middleware.checkWhitelistedIpAddress],
+  handler: postHandler.readAll,
+  description:
+    "read all posts from all communities for a vault_id (descending order)",
+};
+
 endpoints.updatePost = {
   url: "/v1/post/",
   method: "put",
