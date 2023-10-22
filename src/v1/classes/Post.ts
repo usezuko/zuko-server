@@ -7,6 +7,7 @@ const postTable = process.env.TABLELAND_POST_DATABASE;
 const likeTable = process.env.TABLELAND_LIKE_DATABASE;
 const userTable = process.env.TABLELAND_USER_DATABASE;
 const userCommunityTable = process.env.TABLELAND_USER_COMMUNITY_DATABASE;
+const communityTable = process.env.TABLELAND_COMMUNITY_DATABASE;
 const currentTimestamp = Math.floor(new Date().getTime() / 1000);
 
 class Post {
@@ -119,21 +120,24 @@ class Post {
         const { results } = await db
           .prepare(
             `SELECT 
-              p.*,
-              l.like_id IS NOT NULL AS hasLiked,
-              u.username
-            FROM ${postTable} p
-            LEFT JOIN ${likeTable} AS l
-            ON p.post_id = l.post_id AND l.vault_id = ?1
-            LEFT JOIN ${userTable} AS u
-            ON p.vault_id = u.vault_id
-            WHERE p.group_id IN (
-              SELECT group_id
-              FROM ${userCommunityTable}
-              WHERE vault_id = ?1
-            )
-            ORDER BY p.post_id DESC;`
+            p.*,
+            l.like_id IS NOT NULL AS hasLiked,
+            u.username,
+            c.name AS community_name,
+            p.comments_count
+          FROM ${postTable} p
+          LEFT JOIN ${likeTable} AS l
+          ON p.post_id = l.post_id AND l.vault_id = ?1
+          LEFT JOIN ${userTable} AS u
+          ON p.vault_id = u.vault_id
+          LEFT JOIN ${userCommunityTable} AS uc
+          ON p.group_id = uc.group_id
+          LEFT JOIN ${communityTable} AS c
+          ON uc.group_id = c.group_id
+          WHERE uc.vault_id = ?1
+          ORDER BY p.post_id DESC;`
           )
+
           .bind(vault_id)
           .all();
 
