@@ -1,12 +1,12 @@
-# Express Typescript Server
+## Zuko - Backend
 
 Zuko server to build Tableland API with Express and TypeScript.
 
-## API Docs
+### API Docs
 
-https://documenter.getpostman.com/view/24722250/2s9YR6ZtJc
+**API Documentation:** https://documenter.getpostman.com/view/24722250/2s9YR6ZtJc
 
-## Run Locally
+### Run Locally
 
 Install dependencies:
 
@@ -20,7 +20,7 @@ Start the server:
   npm run dev
 ```
 
-## Run on Prod
+### Run on Prod
 
 Install dependencies:
 
@@ -34,7 +34,7 @@ Start the server:
   npm run start
 ```
 
-## Environment Variables
+### Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file:
 
