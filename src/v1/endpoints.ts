@@ -144,7 +144,7 @@ endpoints.createComment = {
 };
 
 endpoints.readComment = {
-  url: "/v1/comment/:post_id",
+  url: "/v1/comment/:post_id/user/:vault_id",
   method: "get",
   middleware: [middleware.checkWhitelistedIpAddress],
   handler: commentHandler.read,

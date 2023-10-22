@@ -17,17 +17,18 @@ const postHandler = {
 
   read: async (req: Request, res: Response) => {
     const postId = Number(req.params.post_id);
+    const vaultId = String(req.params.post_id);
 
-    if (postId) {
+    if (postId && vaultId) {
       const comment = new Comment();
       try {
-        const comments = await comment.read(postId);
+        const comments = await comment.read(postId, vaultId);
         res.status(200).send(comments);
       } catch (err) {
         res.status(400).send(new ApiError(400, "Error" + err));
       }
     } else {
-      res.status(403).send(new ApiError(403, "Error: post_id missing"));
+      res.status(403).send(new ApiError(403, "Error: post_id or vault_id missing"));
     }
   },
 

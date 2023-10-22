@@ -6,6 +6,7 @@ dotenv.config();
 const commentTable = process.env.TABLELAND_COMMENT_DATABASE;
 const postTable = process.env.TABLELAND_POST_DATABASE;
 const userTable = process.env.TABLELAND_USER_DATABASE;
+const likeTable = process.env.TABLELAND_LIKE_DATABASE;
 const currentTimestamp = Math.floor(new Date().getTime() / 1000);
 
 class Comment {
@@ -82,22 +83,40 @@ class Comment {
   };
 
   // read all comments by post_id
-  read = async (post_id: number): Promise<Object | Array<number>> => {
+  read = async (
+    post_id: number,
+    vault_id: string
+  ): Promise<Object | Array<number>> => {
     return new Promise<Object | Array<number>>(async (resolve, reject) => {
       try {
         const { results } = await db
           .prepare(
             `SELECT 
               c.*,
+              l.like_id IS NOT NULL AS hasLiked,
               u.username
             FROM ${commentTable} c
+            LEFT JOIN ${likeTable} AS l
+            ON c.comment_id = l.comment_id AND l.vault_id = ?2
             LEFT JOIN ${userTable} AS u
             ON c.vault_id = u.vault_id
             WHERE c.post_id = ?1
             ORDER BY c.timestamp`
           )
-
-          .bind(post_id)
+          // .prepare(
+          //   `SELECT
+          //     p.*,
+          //     l.like_id IS NOT NULL AS hasLiked,
+          //     u.username
+          //   FROM ${postTable} p
+          //   LEFT JOIN ${likeTable} AS l
+          //   ON p.post_id = l.post_id AND l.vault_id = ?1
+          //   LEFT JOIN ${userTable} AS u
+          //   ON p.vault_id = u.vault_id
+          //   WHERE p.group_id = ?2
+          //   ORDER BY p.post_id DESC`
+          // )
+          .bind(post_id, vault_id)
           .all();
         resolve(results);
       } catch (e: any) {
