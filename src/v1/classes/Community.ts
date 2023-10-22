@@ -13,6 +13,7 @@ class Community {
   group_id?: string;
   name?: string;
   description?: string;
+  picture_url?: string;
 
   constructor(community?: {
     success?: boolean;
@@ -30,6 +31,7 @@ class Community {
     group_id?: string;
     name?: string;
     description?: string;
+    picture_url?: string;
   }) {
     if (community) {
       this.success = community.success;
@@ -37,6 +39,7 @@ class Community {
       this.group_id = community.group_id;
       this.name = community.name;
       this.description = community.description;
+      this.picture_url = community.picture_url;
     }
   }
 
@@ -57,9 +60,9 @@ class Community {
           // Insert community into the table
           const { error, meta: insert } = await db
             .prepare(
-              `INSERT INTO ${communityTable} (name, description, group_id) VALUES (?, ?, ?);`
+              `INSERT INTO ${communityTable} (name, description, group_id, picture_url) VALUES (?, ?, ?, ?);`
             )
-            .bind(community.name, community.description, community.group_id)
+            .bind(community.name, community.description, community.group_id, community.picture_url)
             .run();
 
           // Wait for transaction finality
