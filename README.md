@@ -1,6 +1,6 @@
 ## Zuko - Backend
 
-Zuko server to build Tableland API with Express and TypeScript.
+Zuko server to build Tableland API with Express and TypeScript. It powers the Zuko app using Sismo Connect.
 
 ### API Docs
 
