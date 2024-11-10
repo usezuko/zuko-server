@@ -2,6 +2,7 @@
 /dist
 .env
 package-lock.json
+bun.lockb
 .DS_Store/
 /.DS_Store
 src/tableland/.tablelandrc.json
