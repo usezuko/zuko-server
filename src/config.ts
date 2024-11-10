@@ -3,11 +3,15 @@ import { Wallet, getDefaultProvider } from "ethers";
 import dotenv from "dotenv";
 dotenv.config();
 
-const arbGoerli = `https://arb-goerli.g.alchemy.com/v2/${process.env.ARB_TESTNET_API}`;
+const arbSepolia = "https://sepolia-rollup.arbitrum.io/rpc";
 const ethSepolia = "https://ethereum-sepolia.publicnode.com";
 
-const wallet = new Wallet(process.env.WALLET_PRIVATE_KEY || "");
-const provider = getDefaultProvider(arbGoerli);
+const privateKey = process.env.WALLET_PRIVATE_KEY;
+if (!privateKey) {
+  throw new Error("WALLET_PRIVATE_KEY is not set");
+}
+const wallet = new Wallet(privateKey);
+const provider = getDefaultProvider(arbSepolia);
 const signer = wallet.connect(provider);
 const db = new Database({ signer });
 

@@ -13,11 +13,11 @@
   "license": "ISC",
   "dependencies": {
     "@sismo-core/sismo-connect-server": "^0.0.23",
-    "@tableland/sdk": "4.5.3-dev.0",
+    "@tableland/sdk": "7.2.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "ethers": "^5",
+    "ethers": "^6",
     "express": "^4.18.2",
     "express-jwt": "^8.4.1",
     "fs": "^0.0.1-security",
